@@ -40,9 +40,6 @@ def directorySetup():
     if not os.path.exists('audio'):
         print("[+] Setting up audio directory")
         os.makedirs('audio')
-    if not os.path.exists('video'):
-        print("[+] Setting up video directory")
-        os.makedirs('video')
     print("[+] Directory setup complete")
 
 
