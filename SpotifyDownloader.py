@@ -106,18 +106,12 @@ def readSongsFromCSV(filename):
     songs = [song for song in songs if song]  # Remove any empty objects
     return songs
 
-
-# def renameSong(existingName, newSongName):
-#     existingName = "./audio" + existingName + ".m4a"
-#     new_name = "./audio/" + newSongName + ".mp3"
-#     os.rename(existingName, new_name)
-
 """
 Search Youtube for the first result
 """
 def searchYoutube(song):
     print("[+] Searching YouTube for songs.\n[+] Note: This may take a while")
-    searchQuery = song[0] + song[1]
+    searchQuery = song[0] + " " + song[1]
     print("[+] Searching for >>", searchQuery)
     results = YoutubeSearch(searchQuery, max_results=1).to_json()
     results_dict = json.loads(results)
@@ -171,11 +165,14 @@ def mainOperation(playlist):
     for i in songArray:
         songName = i[0] + " " + i[1]
         url = searchYoutube(i)
-        download_and_convert_to_mp3(url, songName)
+        try:
+            download_and_convert_to_mp3(url, songName)
+        except:
+            print("Error occoured when downloading or renaming")
 
 """
-Main function to repeat for multiple playlists
+Main function to repeat for each playlist
 """
-playlistArray = ["https://open.spotify.com/playlist/74BuEiluEuN4Z8RQh63Hpv?si=0eac5c0812484f56"]
+playlistArray = [""] # Insert playlists here
 for i in playlistArray:
     mainOperation(i)
