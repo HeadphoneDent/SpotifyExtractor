@@ -32,7 +32,9 @@ BANNER = """
 ##############################################################################################                                                                                
 """
 
-
+"""
+Set up 'playlist' and 'audio' directories
+"""
 def directorySetup():
     if not os.path.exists('playlists'):
         print("[+] Setting up playlist directory")
@@ -43,6 +45,9 @@ def directorySetup():
     print("[+] Directory setup complete")
 
 
+"""
+Pull a CSV of a Spotify Playlist
+"""
 def getPlaylistCSV(playlistUrl):
     # Load credentials from .env file
     load_dotenv()
@@ -85,7 +90,9 @@ def getPlaylistCSV(playlistUrl):
     playlistName = "./playlists/" + playlistName + ".csv"
     return playlistName
 
-
+"""
+Create an array of songs and the artist/s
+"""
 def readSongsFromCSV(filename):
     songs = []
     with open(filename, 'r') as file:
@@ -100,27 +107,28 @@ def readSongsFromCSV(filename):
     return songs
 
 
+# def renameSong(existingName, newSongName):
+#     existingName = "./audio" + existingName + ".m4a"
+#     new_name = "./audio/" + newSongName + ".mp3"
+#     os.rename(existingName, new_name)
+
+"""
+Search Youtube for the first result
+"""
 def searchYoutube(song):
     print("[+] Searching YouTube for songs.\n[+] Note: This may take a while")
-    urlArray = []
-    for i in song:
-        searchQuery = i[0] + " " + i[1]
-        print("[+] Searching for >>", searchQuery)
-        # Take first YouTube result from search
-        results = YoutubeSearch(searchQuery, max_results=1).to_json()
-        results_dict = json.loads(results)
-        url = "https://youtube.com" + results_dict['videos'][0]['url_suffix']
-        print("[+] URL found >> " + url)
-        urlArray.append(url)
-    return urlArray
+    searchQuery = song[0] + song[1]
+    print("[+] Searching for >>", searchQuery)
+    results = YoutubeSearch(searchQuery, max_results=1).to_json()
+    results_dict = json.loads(results)
+    url = "https://youtube.com" + results_dict['videos'][0]['url_suffix']
+    print("[+] URL found >> " + url)
+    return url
 
-
-def downloadSong(url):
-    # improve to download directly as mp3
-    os.system(f"yt-dlp_x86.exe {url} -o ./video/%(title)s.%(ext)s")
-
-
-def download_and_convert_to_mp3(url, output_directory='./audio'):
+"""
+Download and convert existing song format to an mp3 
+"""
+def download_and_convert_to_mp3(url, songName, output_directory='./audio'):
     # Ensure the output directory exists
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
@@ -134,27 +142,40 @@ def download_and_convert_to_mp3(url, output_directory='./audio'):
 
     # Download the audio using yt-dlp
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([url])
+        info_dict = ydl.extract_info(url, download=True)
+        song_title = info_dict.get('title', None)
+        print(f"[+] Downloaded: {song_title}")
     
     # Process each file in the output directory
     for file in os.listdir(output_directory):
         file_path = os.path.join(output_directory, file)
         if file_path.endswith(('.webm', '.m4a')):  # Adjust for formats downloaded
-            mp3_file_path = os.path.splitext(file_path)[0] + '.mp3'
+            mp3_file_path = os.path.join(output_directory, songName + '.mp3')
             audio_clip = AudioFileClip(file_path)
             audio_clip.write_audiofile(mp3_file_path, codec='mp3')
             print(f"[+] Converted to MP3 with moviepy: {mp3_file_path}")
             audio_clip.close()  # Close the audio clip to free resources
             os.remove(file_path)  # Remove the original file if no longer needed
 
+"""
+Main operation to be repeated for each playlist
+"""
+def mainOperation(playlist):
+    print(BANNER)
+    directorySetup()
+    # playlist = str(input("Enter the playlist URL\nFormat: https://open.spotify.com/playlist/<playlist>?si=<sourceID>\n>> "))
+    playlist = playlist
+    playlistName = getPlaylistCSV(playlist)
+    songArray = readSongsFromCSV(playlistName)
+    print("[+] Starting download operations")
+    for i in songArray:
+        songName = i[0] + " " + i[1]
+        url = searchYoutube(i)
+        download_and_convert_to_mp3(url, songName)
 
-print(BANNER)
-directorySetup()
-playlist = str(input("Enter the playlist URL\nFormat: https://open.spotify.com/playlist/<playlist>?si=<sourceID>\n>> "))
-playlistName = getPlaylistCSV(playlist)
-songArray = readSongsFromCSV(playlistName)
-
-print("[+] Starting download operations")
-urlArray = searchYoutube(songArray)
-for i in urlArray:
-    download_and_convert_to_mp3(i)
+"""
+Main function to repeat for multiple playlists
+"""
+playlistArray = ["https://open.spotify.com/playlist/74BuEiluEuN4Z8RQh63Hpv?si=0eac5c0812484f56"]
+for i in playlistArray:
+    mainOperation(i)
