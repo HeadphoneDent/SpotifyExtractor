@@ -8,8 +8,8 @@ import re
 import csv
 
 def getPlaylistCSV(playlistUrl):
-    spotify_id = ""
-    spotify_secret = ""
+    spotify_id = "" # Your Spotify ID
+    spotify_secret = "" # Your Spotify Secret
 
     # Authenticate
     client_credentials_manager = SpotifyClientCredentials(client_id=spotify_id, client_secret=spotify_secret)
