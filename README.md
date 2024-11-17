@@ -1,34 +1,38 @@
-# SpotifyDownloader
+# SpotifyExtractor
 
-A Python script that downloads songs from a Spotify playlist, retrieves the corresponding videos from YouTube, and converts them into MP3 files.
+A Python script that downloads data from a Spotify playlist, retrieves the corresponding audio from YouTube, and converts them into MP3 files.
 
 ## Installation
 
 1. **Get Spotify Credentials**:
 
     - Obtain a Client ID and Client Secret from a [Spotify Developer project](https://developer.spotify.com/dashboard).
-    - Create a `.env` file in the project directory with the following format:
+    - Add these values into the SpotifyExtractor.py file:
 
-        ```ini
-        CLIENT_ID='YOUR_CLIENT_ID'
-        CLIENT_SECRET='YOUR_CLIENT_SECRET'
-        ```
+[//]: # (2. **Install Dependencies**:)
 
-2. **Install Dependencies**:
+[//]: # ()
+[//]: # (    - Ensure you have Python 3 and `pip` installed.)
 
-    - Ensure you have Python 3 and `pip` installed.
-    - Install the required Python libraries by running:
+[//]: # (    - Install the required Python libraries by running:)
 
-        ```bash
-        pip install -r requirements.txt
-        ```
+[//]: # ()
+[//]: # (        ```bash)
 
-3. **Run the Script**:
+[//]: # (        pip install -r requirements.txt)
+
+[//]: # (        ```)
+
+2. **Add playlist URLs**:
+
+    - Add the URLs of the Spotify playlists you want to download to the `playlist_urls` list in the `SpotifyExtractor.py` file.
+
+4. **Run the Script**:
 
     - Execute the script using Python:
 
         ```bash
-        python3 SpotifyDownloader.py
+        python3 SpotifyExtractor.py
         ```
 
     - Note: Currently, the script does not accept command-line arguments and is designed to be run as-is.
