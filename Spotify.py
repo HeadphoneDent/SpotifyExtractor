@@ -2,13 +2,13 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 import re
 
-def getPlaylistData(playlistUrl, spotify_id, spotify_secret):
+def getPlaylistData(url, spotify_id, spotify_secret):
     # Authenticate and create session object
     client_credentials_manager = SpotifyClientCredentials(client_id=spotify_id, client_secret=spotify_secret)
     session = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
     # Get uri from https link
-    if match := re.match(r"https://open.spotify.com/playlist/(.*)\?", playlistUrl):
+    if match := re.match(r"https://open.spotify.com/playlist/(.*)\?", url):
         print("[+] Valid URL format")
         playlist_uri = match.groups()[0]
     else:
@@ -25,7 +25,10 @@ def getPlaylistData(playlistUrl, spotify_id, spotify_secret):
     for track in tracks:
         name = track["track"]["name"]
         artists = ", ".join([artist["name"] for artist in track["track"]["artists"]])
-        playlist_data.append([name, artists])
-    
+        album = track["track"]["album"]["name"]
+        genres = session.artist(track["track"]["artists"][0]["id"])["genres"]
+        genre = genres[0] if genres else "Unknown"
+        playlist_data.append([name, artists, album, genre])
+
     print("[+] Pulled data from " + playlistName + " playlist")
     return playlist_data
