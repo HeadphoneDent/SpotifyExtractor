@@ -1,63 +1,22 @@
-from PlaylistInfo import *
 
+from Spotify import getPlaylistData
+from YouTube import searchYoutube
 import os
-import csv
-import json
-from youtube_search import YoutubeSearch
 import yt_dlp
 from moviepy.editor import AudioFileClip
 
+# Define Spotify ID and Secret here
+spotify_id = ""
+spotify_secret = ""
 
 """
-Set up 'playlist' and 'audio' directories
-"""
-def directorySetup():
-    if not os.path.exists('playlists'):
-        print("[+] Setting up playlist directory")
-        os.makedirs('playlists')
-    if not os.path.exists('audio'):
-        print("[+] Setting up audio directory")
-        os.makedirs('audio')
-    print("[+] Directory setup complete")
-
-
-"""
-Create an array of songs and the artist/s
-"""
-def readSongsFromCSV(filename):
-    songs = []
-    with open(filename, 'r') as file:
-        reader = csv.reader(file)
-        for row in reader:
-            # Remove square brackets and blank lines
-            row = [item.strip("[]") for item in row if item.strip()]
-            row = [item for item in row if item]  # Remove any blank lines
-            row = [item for item in row if item.strip()]  # Remove any blank objects
-            songs.append(row)
-    songs = [song for song in songs if song]  # Remove any empty objects
-    return songs
-
-"""
-Search Youtube for the first result
-"""
-def searchYoutube(song):
-    print("[+] Searching YouTube for songs.\n[+] Note: This may take a while")
-    searchQuery = song[0] + " " + song[1]
-    print("[+] Searching for >>", searchQuery)
-    results = YoutubeSearch(searchQuery, max_results=1).to_json()
-    results_dict = json.loads(results)
-    url = "https://youtube.com" + results_dict['videos'][0]['url_suffix']
-    print("[+] URL found >> " + url)
-    return url
-
-"""
-Download and convert existing song format to an mp3 
+Download and convert existing song format to an mp3
 """
 def download_and_convert_to_mp3(url, songName, output_directory='./audio'):
     # Ensure the output directory exists
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
-    
+
     # Define yt-dlp options
     ydl_opts = {
         'format': 'bestaudio/best',  # Select the best audio stream
@@ -70,7 +29,7 @@ def download_and_convert_to_mp3(url, songName, output_directory='./audio'):
         info_dict = ydl.extract_info(url, download=True)
         song_title = info_dict.get('title', None)
         print(f"[+] Downloaded: {song_title}")
-    
+
     # Process each file in the output directory
     for file in os.listdir(output_directory):
         file_path = os.path.join(output_directory, file)
@@ -83,26 +42,27 @@ def download_and_convert_to_mp3(url, songName, output_directory='./audio'):
             os.remove(file_path)  # Remove the original file if no longer needed
 
 """
-Main operation to be repeated for each playlist
+Download operation to be repeated for each playlist
 """
 def downloadOperation(playlist):
-    # playlist = str(input("Enter the playlist URL\nFormat: https://open.spotify.com/playlist/<playlist>?si=<sourceID>\n>> "))
-    playlist = playlist
-    playlistName = getPlaylistCSV(playlist)
-    songArray = readSongsFromCSV(playlistName)
+    playlist_data = getPlaylistData(playlist, spotify_id, spotify_secret)
     print("[+] Starting download operations")
-    for i in songArray:
-        songName = i[0] + " " + i[1]
-        url = searchYoutube(i)
+    for track in playlist_data:
+        songName = track[0] + " " + track[1]
+        url = searchYoutube(track)
         try:
             download_and_convert_to_mp3(url, songName)
         except:
-            print("Error occoured when downloading or renaming")
+            print("Error occurred when downloading or renaming")
 
 """
 Main function to repeat for each playlist
 """
-directorySetup()
-playlistArray = ["https://open.spotify.com/playlist/1xJkoLFPLKlOBkARzkpLQ5?si=10620a5aa24b436f"] # Insert playlists here
+if not os.path.exists('audio'):
+    print("[+] Setting up audio directory")
+    os.makedirs('audio')
+print("[+] Directory setup complete")
+
+playlistArray = ["https://open.spotify.com/playlist/1xJkoLFPLKlOBkARzkpLQ5?si=10620a5aa24b436f"]  # Insert playlists here
 for i in playlistArray:
     downloadOperation(i)
