@@ -1,5 +1,4 @@
 import os
-from dotenv import load_dotenv
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 import csv
@@ -9,28 +8,6 @@ import re
 import yt_dlp
 from moviepy.editor import AudioFileClip
 
-
-
-BANNER = """
-##############################################################################################
-#                                                                                            #
-#                   .d88888b                      dP   oo .8888b                             #             
-#                   88.    "'                     88      88   "                             #             
-#                   `Y88888b. 88d888b. .d8888b. d8888P dP 88aaa  dP    dP                    #             
-#                         `8b 88'  `88 88'  `88   88   88 88     88    88                    #             
-#                   d8'   .8P 88.  .88 88.  .88   88   88 88     88.  .88                    #             
-#                    Y88888P  88Y888P' `88888P'   dP   dP dP     `8888P88                    #             
-#                             88                                      .88                    #             
-#                             dP                                  d8888P                     #             
-#   888888ba                               dP                         dP                     #
-#   88    `8b                              88                         88                     #
-#   88     88 .d8888b. dP  dP  dP 88d888b. 88 .d8888b. .d8888b. .d888b88 .d8888b. 88d888b.   #
-#   88     88 88'  `88 88  88  88 88'  `88 88 88'  `88 88'  `88 88'  `88 88ooood8 88'  `88   #
-#   88    .8P 88.  .88 88.88b.88' 88    88 88 88.  .88 88.  .88 88.  .88 88.  ... 88         #
-#   8888888P  `88888P' 8888P Y8P  dP    dP dP `88888P' `88888P8 `88888P8 `88888P' dP         #
-#                                                                                            #
-##############################################################################################                                                                                
-"""
 
 """
 Set up 'playlist' and 'audio' directories
@@ -49,15 +26,12 @@ def directorySetup():
 Pull a CSV of a Spotify Playlist
 """
 def getPlaylistCSV(playlistUrl):
-    # Load credentials from .env file
-    load_dotenv()
 
-    CLIENT_ID = os.getenv("CLIENT_ID", "")
-    CLIENT_SECRET = os.getenv("CLIENT_SECRET", "")
+    spotify_id = ""
+    spotify_secret = ""
 
     # Authenticate
-    client_credentials_manager = SpotifyClientCredentials(
-        client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
+    client_credentials_manager = SpotifyClientCredentials(client_id=spotify_id, client_secret=spotify_secret)
 
     # Create spotify session object
     session = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
@@ -154,9 +128,7 @@ def download_and_convert_to_mp3(url, songName, output_directory='./audio'):
 """
 Main operation to be repeated for each playlist
 """
-def mainOperation(playlist):
-    print(BANNER)
-    directorySetup()
+def downloadOperation(playlist):
     # playlist = str(input("Enter the playlist URL\nFormat: https://open.spotify.com/playlist/<playlist>?si=<sourceID>\n>> "))
     playlist = playlist
     playlistName = getPlaylistCSV(playlist)
@@ -173,6 +145,7 @@ def mainOperation(playlist):
 """
 Main function to repeat for each playlist
 """
-playlistArray = [""] # Insert playlists here
+directorySetup()
+playlistArray = ["https://open.spotify.com/playlist/1xJkoLFPLKlOBkARzkpLQ5?si=10620a5aa24b436f"] # Insert playlists here
 for i in playlistArray:
-    mainOperation(i)
+    downloadOperation(i)
