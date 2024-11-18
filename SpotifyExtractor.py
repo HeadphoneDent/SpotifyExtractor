@@ -1,4 +1,4 @@
-from Spotify import getPlaylistData
+from PlaylistData import getPlaylistData
 from YouTube import searchYoutube
 import os
 import yt_dlp
@@ -8,8 +8,8 @@ import sys
 
 
 # Define Spotify ID and Secret here
-spotify_id = ""
-spotify_secret = ""
+spotify_id = "fc2a2e3f2a264d91921e4de64e8a54c8"
+spotify_secret = "d5eb99079a474cd5b18f0d4372a79b56"
 
 
 # Get playlists from command line input
