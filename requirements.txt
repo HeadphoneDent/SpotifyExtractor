@@ -1,0 +1,5 @@
+spotipy
+yt-dlp
+eyed3
+moviepy
+python-dotenv

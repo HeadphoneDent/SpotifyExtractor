@@ -7,24 +7,24 @@ A Python script that downloads data from a Spotify playlist, retrieves the corre
 1. **Get Spotify Credentials**:
 
     - Obtain a Client ID and Client Secret from a [Spotify Developer project](https://developer.spotify.com/dashboard).
-    - Add these values into the SpotifyExtractor.py file:
+    - Add these values into a `.env` file in the root directory of the project:
 
-[//]: # (2. **Install Dependencies**:)
+        ```bash
+        CLIENT_ID="your_client_id"
+        CLIENT_SECRET="your_client_secret"
+        ```
 
-[//]: # ()
-[//]: # (    - Ensure you have Python 3 and `pip` installed.)
+2. **Install Dependencies**:
 
-[//]: # (    - Install the required Python libraries by running:)
+    - Ensure you have Python 3 and `pip` installed.
 
-[//]: # ()
-[//]: # (        ```bash)
+    - Install the required Python libraries by running:
 
-[//]: # (        pip install -r requirements.txt)
+        ```bash
+        pip install -r requirements.txt
+        ```
 
-[//]: # (        ```)
-
-
-2. **Run the Script**:
+3. **Run the Script**:
 
     - Execute the script using Python:
 

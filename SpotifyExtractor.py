@@ -5,11 +5,13 @@ import yt_dlp
 from moviepy.editor import AudioFileClip
 import eyed3
 import sys
+from dotenv import load_dotenv
 
 
-# Define Spotify ID and Secret here
-spotify_id = ""
-spotify_secret = ""
+# Load Spotify ID and SECRET
+load_dotenv()
+client_id = os.getenv("CLIENT_ID")
+client_secret = os.getenv("CLIENT_SECRET")
 
 
 # Get playlists from command line input
