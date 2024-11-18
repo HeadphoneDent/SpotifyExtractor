@@ -8,8 +8,8 @@ import sys
 
 
 # Define Spotify ID and Secret here
-spotify_id = "fc2a2e3f2a264d91921e4de64e8a54c8"
-spotify_secret = "d5eb99079a474cd5b18f0d4372a79b56"
+spotify_id = ""
+spotify_secret = ""
 
 
 # Get playlists from command line input
@@ -62,21 +62,6 @@ def download_and_convert_to_mp3(url, songName, output_directory='./audio'):
             os.remove(file_path)  # Remove the original file if no longer needed
 
 
-# Download operation to be repeated for each playlist
-def downloadOperation(playlist):
-    playlist_data = getPlaylistData(playlist, spotify_id, spotify_secret)
-    print("[+] Starting download operations")
-    for track in playlist_data:
-        name, artists, album, genre = track
-        print(f"Track details - Name: {name}, Artists: {artists}, Album: {album}, Genre: {genre}")
-        url = searchYoutube(name + " " + artists + " lyric video")
-        try:
-            download_and_convert_to_mp3(url, name)
-            writeMetadata(f'audio/{name}.mp3', name, artists, album, genre)
-        except:
-            print("[-] Error occurred when downloading or renaming")
-
-
 def setup():
     # Directory setup
     if not os.path.exists('audio'):
@@ -95,7 +80,17 @@ def setup():
 
 def main():
     for j in playlistArray:
-        downloadOperation(j)
+        playlist_data = getPlaylistData(j, spotify_id, spotify_secret)
+        print("[+] Starting download operations")
+        for track in playlist_data:
+            name, artists, album, genre = track
+            print(f"Track details - Name: {name}, Artists: {artists}, Album: {album}, Genre: {genre}")
+            url = searchYoutube(name + " " + artists + " lyric video")
+            try:
+                download_and_convert_to_mp3(url, name)
+                writeMetadata(f'audio/{name}.mp3', name, artists, album, genre)
+            except:
+                print("[-] Error occurred when downloading or renaming")
     print("[+] Download operations complete")
 
 
