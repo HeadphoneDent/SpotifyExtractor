@@ -23,19 +23,17 @@ A Python script that downloads data from a Spotify playlist, retrieves the corre
 
 [//]: # (        ```)
 
-2. **Add playlist URLs**:
 
-    - Add the URLs of the Spotify playlists you want to download to the `playlist_urls` list in the `SpotifyExtractor.py` file.
-
-4. **Run the Script**:
+2. **Run the Script**:
 
     - Execute the script using Python:
 
         ```bash
-        python3 SpotifyExtractor.py
+        python3 SpotifyExtractor.py {url}
+        python3 SpotifyExtractor.py https://open.spotify.com/playlist/3VW1uoFR0DpUR5FFpn7XJh?si=68d3396328154f68
         ```
 
-    - Note: Currently, the script does not accept command-line arguments and is designed to be run as-is.
+    - Alternatively, add the URLs of the Spotify playlists you want to download to `playlist_urls` list at the end of the `SpotifyExtractor.py` file.
 
 ## Features
 
@@ -44,13 +42,12 @@ A Python script that downloads data from a Spotify playlist, retrieves the corre
 
 ## Roadmap
 
--   **URL Array Saving**: Save processed playlist URLs for resuming or tracking.
 -   **Resume Functionality**: Add the ability to resume downloads if interrupted.
 -   **Enhanced Error Handling**: Improve the script's robustness with better error handling.
 -   **Code Improvements**: Refactor code for better readability and maintainability.
 -   **Dependency Management**: Review and manage dependencies more effectively.
--   **Automatic Zipping/Packaging**: Add functionality to zip or package the downloaded files.
+-   **Automatic Zipping/Packaging**: Add functionality to zip or package the downloaded files if hosted on a server.
 
 ## Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request to help improve the project.
+Contributions are welcome. Please open an issue or submit a pull request to help improve the project.

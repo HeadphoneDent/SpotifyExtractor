@@ -4,15 +4,22 @@ import os
 import yt_dlp
 from moviepy.editor import AudioFileClip
 import eyed3
+import sys
 
 
 # Define Spotify ID and Secret here
 spotify_id = ""
 spotify_secret = ""
 
-"""
-Write metadata to each song file
-"""
+
+# Get playlists from command line input
+playlistCount = len(sys.argv) - 1
+playlistArray = []
+for i in range(1, playlistCount + 1):
+    playlistArray.append(sys.argv[i])
+
+
+# Write metadata to each song file
 def writeMetadata(file_path, name, artists, album, genre):
     audiofile = eyed3.load(file_path)
     if audiofile.tag is None:
@@ -24,9 +31,7 @@ def writeMetadata(file_path, name, artists, album, genre):
     audiofile.tag.save()
 
 
-"""
-Download and convert existing song format to an mp3
-"""
+# Download and convert existing song format to mp3
 def download_and_convert_to_mp3(url, songName, output_directory='./audio'):
     # Ensure the output directory exists
     if not os.path.exists(output_directory):
@@ -57,9 +62,7 @@ def download_and_convert_to_mp3(url, songName, output_directory='./audio'):
             os.remove(file_path)  # Remove the original file if no longer needed
 
 
-"""
-Download operation to be repeated for each playlist
-"""
+# Download operation to be repeated for each playlist
 def downloadOperation(playlist):
     playlist_data = getPlaylistData(playlist, spotify_id, spotify_secret)
     print("[+] Starting download operations")
@@ -67,10 +70,6 @@ def downloadOperation(playlist):
         name, artists, album, genre = track
         songName = name + " " + artists
         url = searchYoutube(track)
-        print(f"[+] Downloading: {name}")
-        print(f"    Artists: {artists}")
-        print(f"    Album: {album}")
-        print(f"    Genre: {genre}")
         try:
             download_and_convert_to_mp3(url, songName)
             writeMetadata(f'audio/{songName}.mp3', name, artists, album, genre)
@@ -78,15 +77,24 @@ def downloadOperation(playlist):
             print("Error occurred when downloading or renaming")
 
 
-"""
-Main function to repeat for each playlist
-"""
+
+# Main function to repeat for each playlist
 def main():
+    # Directory setup
     if not os.path.exists('audio'):
         print("[+] Setting up audio directory")
         os.makedirs('audio')
-    print("[+] Directory setup complete")
-    playlistArray = ["https://open.spotify.com/playlist/1xJkoLFPLKlOBkARzkpLQ5?si=10620a5aa24b436f"]  # Insert playlists here
+        print("[+] Created audio directory")
+    else:
+        print("[+] Using existing directory setup")
+
+    # Define playlists here if not specified in command line
+    # playlistArray = []
+    if (len(playlistArray) == 0):
+        print("[-] ERROR: No playlists given")
+        print("[-] Usage: python SpotifyExtractor.py {url}")
+        quit(1)
+
     for i in playlistArray:
         downloadOperation(i)
     print("[+] Download operations complete")

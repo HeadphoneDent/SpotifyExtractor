@@ -2,6 +2,7 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 import re
 
+# Pulls the playlist songs and data from the Spotify API
 def getPlaylistData(url, spotify_id, spotify_secret):
     # Authenticate and create session object
     client_credentials_manager = SpotifyClientCredentials(client_id=spotify_id, client_secret=spotify_secret)

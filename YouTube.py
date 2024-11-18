@@ -1,10 +1,7 @@
-"""
-Method to search YouTube and return the first result
-"""
-
 from youtube_search import YoutubeSearch
 import json
 
+# Method to search YouTube and return the first result
 def searchYoutube(query):
     print("[+] Searching YouTube for songs.\n[+] Note: This may take a while")
     searchQuery = query[0] + " " + query[1]
