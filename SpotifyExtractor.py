@@ -82,7 +82,7 @@ def setup():
 
 def main():
     for j in playlistArray:
-        playlist_data = getPlaylistData(j, spotify_id, spotify_secret)
+        playlist_data = getPlaylistData(j, client_id, client_secret)
         print("[+] Starting download operations")
         for track in playlist_data:
             name, artists, album, genre = track
