@@ -57,7 +57,7 @@ def download_and_convert_to_mp3(url, songName, output_directory='./audio'):
             mp3_file_path = os.path.join(output_directory, songName + '.mp3')
             audio_clip = AudioFileClip(file_path)
             audio_clip.write_audiofile(mp3_file_path, codec='mp3')
-            print(f"[+] Converted to MP3 with moviepy: {mp3_file_path}")
+            print("[+] Converted to MP3 with moviepy: " + mp3_file_path)
             audio_clip.close()  # Close the audio clip to free resources
             os.remove(file_path)  # Remove the original file if no longer needed
 
@@ -68,18 +68,16 @@ def downloadOperation(playlist):
     print("[+] Starting download operations")
     for track in playlist_data:
         name, artists, album, genre = track
-        songName = name + " " + artists
-        url = searchYoutube(track)
+        print(f"Track details - Name: {name}, Artists: {artists}, Album: {album}, Genre: {genre}")
+        url = searchYoutube(name + " " + artists + " lyric video")
         try:
-            download_and_convert_to_mp3(url, songName)
-            writeMetadata(f'audio/{songName}.mp3', name, artists, album, genre)
+            download_and_convert_to_mp3(url, name)
+            writeMetadata(f'audio/{name}.mp3', name, artists, album, genre)
         except:
-            print("Error occurred when downloading or renaming")
+            print("[-] Error occurred when downloading or renaming")
 
 
-
-# Main function to repeat for each playlist
-def main():
+def setup():
     # Directory setup
     if not os.path.exists('audio'):
         print("[+] Setting up audio directory")
@@ -88,17 +86,19 @@ def main():
     else:
         print("[+] Using existing directory setup")
 
-    # Define playlists here if not specified in command line
     # playlistArray = []
     if (len(playlistArray) == 0):
         print("[-] ERROR: No playlists given")
         print("[-] Usage: python SpotifyExtractor.py {url}")
         quit(1)
 
-    for i in playlistArray:
-        downloadOperation(i)
+
+def main():
+    for j in playlistArray:
+        downloadOperation(j)
     print("[+] Download operations complete")
 
 
 if __name__ == '__main__':
+    setup()
     main()
