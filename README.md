@@ -45,9 +45,7 @@ A Python script that downloads data from a Spotify playlist, retrieves the corre
 
 -   **Resume Functionality**: Add the ability to resume downloads if interrupted.
 -   **Enhanced Error Handling**: Improve the script's robustness with better error handling.
--   **Code Improvements**: Refactor code for better readability and maintainability.
 -   **Dependency Management**: Review and manage dependencies more effectively.
--   **Automatic Zipping/Packaging**: Add functionality to zip or package the downloaded files if hosted on a server.
 
 ## Contributing
 
