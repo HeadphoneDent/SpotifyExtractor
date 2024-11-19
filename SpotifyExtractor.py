@@ -86,13 +86,26 @@ def main():
         print("[+] Starting download operations")
         for track in playlist_data:
             name, artists, album, genre = track
-            print(f"Track details - Name: {name}, Artists: {artists}, Album: {album}, Genre: {genre}")
-            url = searchYoutube(name + " " + artists + " lyric video")
-            try:
-                download_and_convert_to_mp3(url, name)
-                writeMetadata(f'audio/{name}.mp3', name, artists, album, genre)
-            except:
-                print("[-] Error occurred when downloading or renaming")
+            print(f"[+] Track details - Name: {name}, Artists: {artists}, Album: {album}, Genre: {genre}")
+            currentfile = f'audio/{name}.mp3'
+            audiofile = eyed3.load(currentfile)
+            if os.path.exists(currentfile):
+                if audiofile.tag.artist == artists:
+                    print(f"[+] {name} already exists in audio directory")
+                    continue
+                url = searchYoutube(name + " " + artists + " lyric video")
+                try:
+                    download_and_convert_to_mp3(url, name)
+                    writeMetadata(f'audio/{name}.mp3', name, artists, album, genre)
+                except:
+                    print("[-] Error occurred when downloading or renaming")
+            else:
+                url = searchYoutube(name + " " + artists + " lyric video")
+                try:
+                    download_and_convert_to_mp3(url, name)
+                    writeMetadata(f'audio/{name}.mp3', name, artists, album, genre)
+                except:
+                    print("[-] Error occurred when downloading or renaming")
     print("[+] Download operations complete")
 
 

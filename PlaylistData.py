@@ -4,6 +4,7 @@ import re
 
 # Pulls the playlist songs and data from the Spotify API
 def getPlaylistData(url, spotify_id, spotify_secret):
+    print("[+] Creating Spotify session")
     # Authenticate and create session object
     client_credentials_manager = SpotifyClientCredentials(client_id=spotify_id, client_secret=spotify_secret)
     session = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
@@ -17,8 +18,8 @@ def getPlaylistData(url, spotify_id, spotify_secret):
         raise ValueError("Expected format: https://open.spotify.com/playlist/...")
 
     # Get list of tracks in a given playlist (note: max playlist length 100)
+    print("[+] Pulling playlist data from Spotify API")
     tracks = session.playlist_tracks(playlist_uri)["items"]
-
     playlistName = session.playlist(playlist_uri)["name"]
 
     # Store data in memory
