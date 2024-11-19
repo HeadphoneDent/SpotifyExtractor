@@ -34,8 +34,6 @@ A Python script that downloads data from a Spotify playlist, retrieves the corre
         python3 SpotifyExtractor.py https://open.spotify.com/playlist/3VW1uoFR0DpUR5FFpn7XJh?si=68d3396328154f68 https://open.spotify.com/playlist/43g9WYiJsP8cyeNhU4ry89?si=0b1cca0ed59c4a3f
         ```
 
-    - Alternatively, add the URLs of the Spotify playlists you want to download to `playlist_urls` list at the end of the `SpotifyExtractor.py` file.
-
 ## Features
 
 -   **Automatic Directory Structuring**: Creates necessary directories for storing audio files.
