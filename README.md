@@ -44,12 +44,6 @@ A Python script that downloads data from a Spotify playlist, retrieves the corre
 -   **Duplicate Handling**: Skips songs that have already been downloaded.
 -   **Playlist Support**: Downloads all songs from several playlists at once.
 
-## Roadmap
-
--   **Resume Functionality**: Add the ability to resume downloads if interrupted.
--   **Enhanced Error Handling**: Improve the script's robustness with better error handling.
--   **Dependency Management**: Review and manage dependencies more effectively.
-
 ## Contributing
 
 Contributions are welcome. Please open an issue or submit a pull request to help improve the project.
