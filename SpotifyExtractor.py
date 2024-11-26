@@ -88,8 +88,8 @@ def main():
             name, artists, album, genre = track
             print(f"[+] Track details - Name: {name}, Artists: {artists}, Album: {album}, Genre: {genre}")
             currentfile = f'audio/{name}.mp3'
-            audiofile = eyed3.load(currentfile)
             if os.path.exists(currentfile):
+                audiofile = eyed3.load(currentfile)
                 if audiofile.tag.artist == artists:
                     print(f"[+] {name} already exists in audio directory")
                     continue
