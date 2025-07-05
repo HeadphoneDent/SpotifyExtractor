@@ -41,7 +41,3 @@ A Python script that downloads data from a Spotify playlist, retrieves the corre
 -   **Metadata Extraction**: Retrieves metadata for each song, including the title, artist, and album.
 -   **Duplicate Handling**: Skips songs that have already been downloaded.
 -   **Playlist Support**: Downloads all songs from several playlists at once.
-
-## Contributing
-
-Contributions are welcome. Please open an issue or submit a pull request to help improve the project.
