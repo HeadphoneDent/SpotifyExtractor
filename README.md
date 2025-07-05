@@ -30,7 +30,7 @@ A Python script that downloads data from a Spotify playlist, retrieves the corre
     - Execute the script using Python:
 
         ```bash
-        python3 SpotifyExtractor.py {urls}
+        python3 SpotifyExtractor.py {Spotify URL/s}
         python3 SpotifyExtractor.py https://open.spotify.com/playlist/3VW1uoFR0DpUR5FFpn7XJh?si=68d3396328154f68 https://open.spotify.com/playlist/43g9WYiJsP8cyeNhU4ry89?si=0b1cca0ed59c4a3f
         ```
 
