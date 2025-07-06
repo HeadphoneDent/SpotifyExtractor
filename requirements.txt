@@ -3,3 +3,4 @@ yt-dlp
 eyed3
 moviepy
 python-dotenv
+youtube_search
