@@ -1,6 +1,3 @@
-spotipy
-yt-dlp
-eyed3
-moviepy
-python-dotenv
-youtube_search
+requests
+base64
+re
