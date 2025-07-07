@@ -1,114 +1,60 @@
-from PlaylistData import getPlaylistData
-from YouTube import searchYoutube
-import os
-import yt_dlp
-from moviepy.editor import AudioFileClip
-import eyed3
-import sys
-from dotenv import load_dotenv
+#     # Get list of tracks in a given playlist (note: max playlist length 100)
+#     print("[+] Pulling playlist data from Spotify API")
+#     tracks = session.playlist_tracks(playlist_uri)["items"]
+#     playlistName = session.playlist(playlist_uri)["name"]
+
+#     # Store data in memory
+#     playlist_data = []
+#     for track in tracks:
+#         name = track["track"]["name"]
+#         artists = ", ".join([artist["name"] for artist in track["track"]["artists"]])
+#         album = track["track"]["album"]["name"]
+#         genres = session.artist(track["track"]["artists"][0]["id"])["genres"]
+#         genre = genres[0] if genres else "Unknown"
+#         playlist_data.append([name, artists, album, genre])
+
+#     print("[+] Pulled data from " + playlistName + " playlist")
+#     return playlist_data
 
 
-# Load Spotify ID and SECRET
-load_dotenv()
-client_id = os.getenv("CLIENT_ID")
-client_secret = os.getenv("CLIENT_SECRET")
+import requests
+import base64
+import re
 
+url = [
+    "insert playlist link here"
+]
+client_id = "insert client id here"
+client_secret = "insert client secret here"
 
-# Get playlists from command line input
-playlistCount = len(sys.argv) - 1
-playlistArray = []
-for i in range(1, playlistCount + 1):
-    playlistArray.append(sys.argv[i])
+# Check URL's for the playlist regex
+def validateUrls():
+    for link in url:
+        if match := re.match(r"https://open.spotify.com/playlist/(.*)\?", link):
+            print("[+] Correct format of URL: ", link)
+            playlist_uri = match.groups()[0]
+        else:
+            print("[-] Invalid URL format of: ", link)
+            print("[-] Ensure only playlist links are provided...")
+            exit(1)
 
+# Use the provided client_id and client_secret to request an access token
+def getAccessToken():
+    auth_str = f"{client_id}:{client_secret}"
+    b64_auth_str = base64.b64encode(auth_str.encode()).decode()
 
-# Write metadata to each song file
-def writeMetadata(file_path, name, artists, album, genre):
-    audiofile = eyed3.load(file_path)
-    if audiofile.tag is None:
-        audiofile.initTag()
-    audiofile.tag.title = name
-    audiofile.tag.artist = artists
-    audiofile.tag.album = album
-    audiofile.tag.genre = genre
-    audiofile.tag.save()
+    headers = {"Authorization": f"Basic {b64_auth_str}"}
+    data = {"grant_type": "client_credentials"}
 
+    response = requests.post("https://accounts.spotify.com/api/token", headers=headers, data=data)
 
-# Download and convert existing song format to mp3
-def download_and_convert_to_mp3(url, songName, output_directory='./audio'):
-    # Ensure the output directory exists
-    if not os.path.exists(output_directory):
-        os.makedirs(output_directory)
-
-    # Define yt-dlp options
-    ydl_opts = {
-        'format': 'bestaudio/best',  # Select the best audio stream
-        'outtmpl': f'{output_directory}/%(title)s.%(ext)s',  # Output file template
-        'postprocessors': [],  # No post-processing during download
-    }
-
-    # Download the audio using yt-dlp
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        info_dict = ydl.extract_info(url, download=True)
-        song_title = info_dict.get('title', None)
-        print(f"[+] Downloaded: {song_title}")
-
-    # Process each file in the output directory
-    for file in os.listdir(output_directory):
-        file_path = os.path.join(output_directory, file)
-        if file_path.endswith(('.webm', '.m4a')):  # Adjust for formats downloaded
-            mp3_file_path = os.path.join(output_directory, songName + '.mp3')
-            audio_clip = AudioFileClip(file_path)
-            audio_clip.write_audiofile(mp3_file_path, codec='mp3')
-            print("[+] Converted to MP3 with moviepy: " + mp3_file_path)
-            audio_clip.close()  # Close the audio clip to free resources
-            os.remove(file_path)  # Remove the original file if no longer needed
-
-
-def setup():
-    # Directory setup
-    if not os.path.exists('audio'):
-        print("[+] Setting up audio directory")
-        os.makedirs('audio')
-        print("[+] Created audio directory")
+    if response.status_code == 200:
+        print("Acces Token: ", response.json().get("access_token"))
+        print("Token Type: ", response.json().get("token_type"))
+        print("Expires In: ", response.json().get("expires_in"))
     else:
-        print("[+] Using existing directory setup")
-
-    # playlistArray = []
-    if (len(playlistArray) == 0):
-        print("[-] ERROR: No playlists given")
-        print("[-] Usage: python SpotifyExtractor.py {url}")
-        quit(1)
+        print("Failed to get token:", response.status_code, response.text)
 
 
-def main():
-    for j in playlistArray:
-        playlist_data = getPlaylistData(j, client_id, client_secret)
-        print("[+] Starting download operations")
-        for track in playlist_data:
-            name, artists, album, genre = track
-            print(f"[+] Track details - Name: {name}, Artists: {artists}, Album: {album}, Genre: {genre}")
-            currentfile = f'audio/{name}.mp3'
-            if os.path.exists(currentfile):
-                audiofile = eyed3.load(currentfile)
-                if audiofile.tag.artist == artists:
-                    print(f"[+] {name} already exists in audio directory")
-                    continue
-                url = searchYoutube(name + " " + artists + " lyric video")
-                try:
-                    download_and_convert_to_mp3(url, name)
-                    writeMetadata(f'audio/{name}.mp3', name, artists, album, genre)
-                except:
-                    print("[-] Error occurred when downloading or renaming")
-            else:
-                url = searchYoutube(name + " " + artists + " lyric video")
-                try:
-                    download_and_convert_to_mp3(url, name)
-                    writeMetadata(f'audio/{name}.mp3', name, artists, album, genre)
-                except:
-                    print("[-] Error occurred when downloading or renaming")
-    print("[+] Download operations complete")
-
-
-if __name__ == '__main__':
-    setup()
-    main()
+if __name__ == "__main__":
+    validateUrls()
