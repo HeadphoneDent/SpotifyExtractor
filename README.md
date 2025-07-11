@@ -1,8 +1,8 @@
 # SpotifyExtractor
-> **In development, please wait for until this message is removed...**
+> This project has been archived. While it can still be used, I recommend [this](https://github.com/spotDL/spotify-downloader) project as it’s much faster.
 
 A Python script that downloads data from a Spotify playlist, retrieves the corresponding audio from YouTube, and converts them into MP3 files.
-> **Note**: Each Spotify playlist is limited to a maximum of 100 songs returned by the API. Remaining songs will not be downloaded.
+**Note**: *Each Spotify playlist is limited to a maximum of 100 songs returned by the API. Remaining songs will not be downloaded.*
 
 ## Installation
 
